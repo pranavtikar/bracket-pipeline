@@ -1,6 +1,7 @@
 import gmsh
 
 L, W = 80.0, 40.0  # base length and width (mm), fixed
+HOLE_FRAC = 0.5
 
 
 def is_valid(p):
@@ -9,8 +10,8 @@ def is_valid(p):
         rf < 0.5 * H
         and rf < L - t - 5
         and 2 * rh < 0.6 * W
-        and 0.7 * H - rh - rf > 2.0   # hole clears the fillet
-        and 0.3 * H - rh > 3.0        # hole clears the top of the leg
+        and HOLE_FRAC * H - rh - rf > 2.0   # hole clears the fillet
+        and (1 - HOLE_FRAC) * H - rh > 3.0        # hole clears the top of the leg
     )
 
 
@@ -36,7 +37,7 @@ def build_mesh(p, h_global, h_local, order=2):
     occ.synchronize()
 
     # hole through the leg, axis along x
-    cyl = occ.addCylinder(-1, W / 2, t + 0.7 * H, t + 2, 0, 0, rh)
+    cyl = occ.addCylinder(-1, W / 2, t + HOLE_FRAC * H, t + 2, 0, 0, rh)
     vol, _ = occ.cut(vol, [(3, cyl)])
     occ.synchronize()
 
