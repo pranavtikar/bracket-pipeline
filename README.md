@@ -127,7 +127,7 @@ The Gaussian process is slightly more accurate than the MLP on this split; with 
 
 **Speed.** One MLP prediction takes about 0.48 ms (2.3 microseconds per design in a batch), against a median of 5.96 s for one FE solve (mesh import, assembly and solve; Gmsh meshing time is not included), a factor of more than 10,000 (about 11,000 and 12,500 in two separate runs).
 
-On an unseen design (t = 7.3, H = 52, hole 4.2, fillet 5.5) the surrogate predicted 82.2 MPa and the FE solution gave 82.1 MPa.
+On an unseen design (t = 7.3, H = 52, hole 4.2, fillet 5.5) the shipped surrogate predicts 83.2 MPa and the FE solution gives 82.1 MPa (1.3 % apart).
 
 ## Limitations
 
