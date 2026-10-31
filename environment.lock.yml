@@ -392,5 +392,3 @@ dependencies:
   - zfp=1.0.1
   - zlib-ng=2.3.3
   - zstd=1.5.7
-  - pip:
-      - bracket==0.1.0
