@@ -1,0 +1,41 @@
+{
+  "n_train": 154,
+  "n_test": 39,
+  "best_params": {
+    "regressor__mlpregressor__alpha": 0.01,
+    "regressor__mlpregressor__hidden_layer_sizes": [
+      64,
+      64
+    ]
+  },
+  "cv_mape_pct": 0.9225907753287521,
+  "test": {
+    "MLP (tuned)": {
+      "mape_pct": 0.7990988752059126,
+      "r2": 0.9992854760325665,
+      "max_err_pct": 2.6997962227094674,
+      "within5_pct": 100.0
+    },
+    "Gaussian process": {
+      "mape_pct": 0.5857960679400349,
+      "r2": 0.999477244625092,
+      "max_err_pct": 3.4726722119562647,
+      "within5_pct": 100.0
+    },
+    "Power law (log-log linear)": {
+      "mape_pct": 2.792261950854666,
+      "r2": 0.9949167546357373,
+      "max_err_pct": 7.82262417280876,
+      "within5_pct": 92.3076923076923
+    }
+  },
+  "predict_ms": 0.47486458200000925,
+  "fe_solve_s": 5.962758550005674,
+  "learning_curve": {
+    "20": 2.135603187293901,
+    "40": 1.3528918210846341,
+    "80": 0.9781889615825848,
+    "120": 0.8377810525826289,
+    "154": 0.793884039539355
+  }
+}
