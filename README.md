@@ -73,7 +73,7 @@ Geometries that cannot be built (hole overlapping the fillet or the leg top, ove
 
 ![Geometry](results/geometry.png)
 
-*Dimensioned views of the reference design (all dimensions in mm). Blue marks the four variable parameters; the base size is fixed.*
+*Dimensioned views of the reference design (all dimensions in mm). Blue marks the four variable parameters; the base size is fixed. The red arrow shows the load (500 N in +x, a uniform shear traction on the top face of the leg), and the hatching shows the clamped bottom face.*
 
 ## Method notes
 
