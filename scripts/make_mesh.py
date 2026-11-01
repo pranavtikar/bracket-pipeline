@@ -20,6 +20,7 @@ try:
     build_mesh(params, a.h_global, a.h_local)
     for k, v in quality_metrics().items():
         print(f"{k:12s} {v:.4g}")
+    gmsh.option.setNumber("Mesh.SaveAll", 1)
     gmsh.write(a.out)
     print("wrote", a.out)
 finally:

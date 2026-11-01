@@ -27,3 +27,8 @@ cv:
 
 test:
 > python -m pytest -q
+.PHONY: figures
+
+figures:
+> python scripts/plot_geometry.py
+> python scripts/plot_stress.py

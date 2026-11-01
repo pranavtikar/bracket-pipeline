@@ -50,6 +50,7 @@ The result files are included, so `make train` and `make test` work without re-r
 | `make audit` | re-solves every design on a second mesh, builds `dataset_clean.csv` | roughly 20-30 min |
 | `make train` | trains and evaluates the surrogate | about a minute |
 | `make cv` | repeated cross-validation | about a minute |
+| `make figures` | geometry drawing and stress contour for this README | under a minute |
 
 Predict a new design:
 
@@ -69,6 +70,10 @@ L-shaped bracket: base plate 80 x 40 mm, upright leg of height H with a round ho
 | `r_fillet` | inner fillet radius | 3 - 10 |
 
 Geometries that cannot be built (hole overlapping the fillet or the leg top, oversized fillet) are rejected before meshing.
+
+![Geometry](results/geometry.png)
+
+*Dimensioned views of the reference design (all dimensions in mm). Blue marks the four variable parameters; the base size is fixed.*
 
 ## Method notes
 
@@ -93,6 +98,12 @@ Geometries that cannot be built (hole overlapping the fillet or the leg top, ove
 | 2.6 / 0.65 | 193,059 | 101.87 | 0.29 % |
 
 Criterion: relative change below 2 % for the last two refinements. The values fluctuate around 102 MPa instead of approaching it monotonically, which is typical when every refinement is a new unstructured mesh. The generated HTML report (`results/convergence_report.html`) adds the quality plots.
+
+### Stress field of the reference design
+
+![von Mises stress](results/stress_contour.png)
+
+Von Mises stress on the dataset mesh (h = 3.4 mm, 0.85 mm near hole and fillet), nodal-averaged for display with a banded colour scale. The scale ends at the maximum of the unaveraged element field, which is the value used everywhere else in this README, so the averaged peak shows slightly below the top of the scale. The marker shows where that maximum is.
 
 ### Choice of the dataset mesh
 
