@@ -87,11 +87,21 @@ ax.annotate(f"R = {rf:g}", xy=(t + rf + rf * np.cos(ang), t + rf + rf * np.sin(a
             xytext=(t + rf + 18, t + rf + 14), color=VAR, fontsize=FS,
             arrowprops=dict(arrowstyle="->", color=VAR, lw=1.1))
 arrow(ax, t / 2, t + H, t + 34, t + H, RED, lw=2.8, scale=22)       # load: +x, on the top face
-ax.text(t + 4, t + H + 2.5, f"F = {LOAD_N:g} N", color=RED, fontsize=13, fontweight="bold",
+ax.text(t + 17, t + H + 2.5, f"F = {LOAD_N:g} N", color=RED, fontsize=13, fontweight="bold",
         ha="left", va="bottom")
-ax.text(t + 4, t + H - 2.5, "(+x, shear on the top face)", color=RED, fontsize=10,
+ax.text(t + 17, t + H - 2.5, "(+x, shear on the top face)", color=RED, fontsize=10,
         ha="left", va="top")
-ox, oz = L - 24, t + 22                                              # axis triad
+# how the leg moves: cantilever deflection shape, strongly exaggerated (schematic, not to scale)
+sv = np.linspace(0, 1, 40)
+dx = 9.0 * 0.5 * (3 * sv ** 2 - sv ** 3)                              # 9 mm drawn at the top
+zz = t + H * sv
+GRN = "#2e7d32"
+ax.plot(dx, zz, "--", color=GRN, lw=1.4)                              # outer face
+ax.plot(dx + t, zz, "--", color=GRN, lw=1.4)                          # inner face
+ax.plot([dx[-1], dx[-1] + t], [t + H, t + H], "--", color=GRN, lw=1.4)
+ax.text(t + 17, t + H - 14, "dashed: leg bends towards +x\n(exaggerated, not to scale)",
+        color=GRN, fontsize=10, ha="left", va="top")
+ox, oz = L - 8, t + 22                                               # axis triad
 arrow(ax, ox, oz, ox + 14, oz, "#333333"); arrow(ax, ox, oz, ox, oz + 14, "#333333")
 ax.text(ox + 17, oz, "x", ha="left", va="center", fontsize=12, color="#333333")
 ax.text(ox, oz + 17, "z", ha="center", va="bottom", fontsize=12, color="#333333")
