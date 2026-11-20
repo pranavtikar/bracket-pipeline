@@ -81,7 +81,7 @@ Geometries that cannot be built (hole overlapping the fillet or the leg top, ove
 
 **Stress measure.** The quantity of interest is the maximum von Mises stress in a region of interest (ROI): the lower leg including hole and fillet, excluding the clamped and loaded faces. Stress near a clamped edge or an applied load is singular and grows without bound under refinement, so a global maximum would never converge. The global maximum equalled the ROI maximum in every run, including all 193 dataset designs, including all 193 dataset designs, which suggests the singularities did not dominate at the mesh sizes used.
 
-**Sanity checks.** Tip deflection is compared with Euler-Bernoulli beam theory and peak stress with the nominal bending stress (`tests/test_fea.py`). The beam formula ignores the hole and root flexibility, so only agreement within about 10 % is expected. For the reference design FE gives 0.1046 mm against 0.1004 mm (ratio 1.04); with the 3 mm hole used in the test it is 0.0995 mm.
+**Sanity checks.** Tip deflection is compared with Euler-Bernoulli beam theory and peak stress with the nominal bending stress (`tests/test_fea.py`). The beam formula ignores the hole and root flexibility, so only agreement within about 10 % is expected. For the reference design on the dataset mesh, the mean displacement of the top face is 0.104 mm against 0.100 mm from beam theory (ratio 1.04), and the top of the leg tilts by about 0.20 degrees (`scripts/deflection.py`). The test in `tests/test_fea.py` uses a coarser mesh and a 3 mm hole and accepts a ratio between 0.9 and 1.1.
 
 ## Results
 
@@ -104,6 +104,12 @@ Criterion: relative change below 2 % for the last two refinements. The values fl
 ![von Mises stress](results/stress_contour.png)
 
 Von Mises stress on the dataset mesh (h = 3.4 mm, 0.85 mm near hole and fillet), nodal-averaged for display with a banded colour scale. The scale ends at the maximum of the unaveraged element field, which is the value used everywhere else in this README, so the averaged peak shows slightly below the top of the scale. The marker shows where that maximum is.
+
+### Bending of the leg
+
+![Deflection](results/deflection.png)
+
+Displacement in x along the outer face of the leg (FE, averaged over the width) against the cantilever formula. Under the 500 N load the top of the leg moves 0.104 mm towards +x, which is 0.23 % of the leg height and 4 % more than beam theory. The beam formula ignores the flexibility of the base plate, the hole and the fillet, which probably explains the difference.
 
 ### Choice of the dataset mesh
 
