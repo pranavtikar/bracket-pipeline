@@ -32,3 +32,4 @@ test:
 figures:
 > python scripts/plot_geometry.py
 > python scripts/plot_stress.py
+> python scripts/plot_stress.py --warp 100

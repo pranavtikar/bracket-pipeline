@@ -101,9 +101,9 @@ Criterion: relative change below 2 % for the last two refinements. The values fl
 
 ### Stress field of the reference design
 
-![von Mises stress](results/stress_contour.png)
+![von Mises stress](results/stress_contour_warp.png)
 
-Von Mises stress on the dataset mesh (h = 3.4 mm, 0.85 mm near hole and fillet), nodal-averaged for display with a banded colour scale. The scale ends at the maximum of the unaveraged element field, which is the value used everywhere else in this README, so the averaged peak shows slightly below the top of the scale. The marker shows where that maximum is.
+Von Mises stress on the dataset mesh (h = 3.4 mm, 0.85 mm near hole and fillet), nodal-averaged for display with a banded colour scale. The scale ends at the maximum of the unaveraged element field, which is the value used everywhere else in this README, so the averaged peak shows slightly below the top of the scale. The marker shows the location of that maximum, one of two mirror-symmetric peaks at the sides of the hole (the other side carries almost the same stress). The geometry is drawn deformed, with all displacements multiplied by 100 (thin black lines show the undeformed outline); the scaling is for display only and does not change the stress values.
 
 ### Bending of the leg
 

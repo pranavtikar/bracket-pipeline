@@ -23,12 +23,28 @@ def nodal_average(n_nodes, node_of_value, values):
     return total / np.maximum(count, 1.0)
 
 
-def render_matplotlib(points, tris, values, clim, marker, label, title, out, n_levels=10):
+def feature_edges(points, tris, angle_deg=30.0):
+    """Edges of the surface triangulation where the surface bends by more than angle_deg."""
+    v = points[tris]
+    n = np.cross(v[:, 1] - v[:, 0], v[:, 2] - v[:, 0])
+    n /= np.linalg.norm(n, axis=1, keepdims=True) + 1e-30
+    edges = np.vstack([tris[:, [0, 1]], tris[:, [1, 2]], tris[:, [2, 0]]])
+    face = np.tile(np.arange(len(tris)), 3)
+    key = np.sort(edges, axis=1)
+    order = np.lexsort((key[:, 1], key[:, 0]))
+    key, face = key[order], face[order]
+    pair = np.flatnonzero(np.all(key[1:] == key[:-1], axis=1))   # edges shared by two triangles
+    cos = np.abs(np.einsum("ij,ij->i", n[face[pair]], n[face[pair + 1]]))
+    return key[pair[cos < np.cos(np.radians(angle_deg))]]
+
+
+def render_matplotlib(points, tris, values, clim, marker, label, title, out,
+                      outline=None, n_levels=10):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     from matplotlib import cm, colors
-    from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+    from mpl_toolkits.mplot3d.art3d import Line3DCollection, Poly3DCollection
 
     norm = colors.Normalize(*clim)
     cmap = plt.get_cmap("jet", n_levels)
@@ -37,8 +53,13 @@ def render_matplotlib(points, tris, values, clim, marker, label, title, out, n_l
     ax = fig.add_subplot(111, projection="3d")
     ax.add_collection3d(Poly3DCollection(points[tris], facecolors=face_rgba,
                                          edgecolors=face_rgba, linewidths=0.3))
-    used = points[np.unique(tris)]
-    lo, hi = used.min(axis=0), used.max(axis=0)
+    extent = points[np.unique(tris)]
+    if outline is not None:                     # undeformed shape as thin black lines
+        ref_points, edges = outline
+        ax.add_collection3d(Line3DCollection(ref_points[edges], colors="black",
+                                             linewidths=0.9, alpha=0.7))
+        extent = np.vstack([extent, ref_points[np.unique(edges)]])
+    lo, hi = extent.min(axis=0), extent.max(axis=0)
     ax.set_xlim(lo[0], hi[0]); ax.set_ylim(lo[1], hi[1]); ax.set_zlim(lo[2], hi[2])
     ax.set_box_aspect(hi - lo)
     ax.view_init(elev=22, azim=38)
@@ -58,7 +79,8 @@ def render_matplotlib(points, tris, values, clim, marker, label, title, out, n_l
     plt.close(fig)
 
 
-def render_pyvista(points, tris, values, clim, marker, label, title, out, n_levels=10):
+def render_pyvista(points, tris, values, clim, marker, label, title, out,
+                   outline=None, n_levels=10):
     import pyvista as pv
 
     pv.OFF_SCREEN = True
@@ -72,6 +94,11 @@ def render_pyvista(points, tris, values, clim, marker, label, title, out, n_leve
                 scalar_bar_args=dict(title="von Mises stress [MPa]", n_labels=n_levels + 1,
                                      fmt="%.0f", vertical=True, color="black",
                                      title_font_size=20, label_font_size=18))
+    if outline is not None:                     # undeformed shape as thin black lines
+        ref_points, edges = outline
+        lines = np.hstack([np.full((len(edges), 1), 2), edges]).astype(np.int64).ravel()
+        pl.add_mesh(pv.PolyData(ref_points, lines=lines), color="black", line_width=2,
+                    opacity=0.7, lighting=False)
     if marker is not None:
         pl.add_point_labels(np.array([marker]), [label], point_size=16, font_size=22,
                             text_color="black", point_color="black", shape_color="white",
@@ -85,16 +112,17 @@ def render_pyvista(points, tris, values, clim, marker, label, title, out, n_leve
     pl.close()
 
 
-def render(points, tris, values, clim, marker, label, title, out, renderer="auto"):
+def render(points, tris, values, clim, marker, label, title, out, renderer="auto",
+           outline=None):
     """renderer: 'pyvista', 'matplotlib' or 'auto' (PyVista if a display exists, else matplotlib)."""
     has_display = bool(os.environ.get("DISPLAY") or os.environ.get("WAYLAND_DISPLAY"))
     if renderer == "pyvista" or (renderer == "auto" and has_display):
         try:
-            render_pyvista(points, tris, values, clim, marker, label, title, out)
+            render_pyvista(points, tris, values, clim, marker, label, title, out, outline=outline)
             return "pyvista"
         except Exception as e:                       # fall back instead of failing
             if renderer == "pyvista":
                 raise
             print(f"PyVista rendering failed ({type(e).__name__}: {e}); using matplotlib")
-    render_matplotlib(points, tris, values, clim, marker, label, title, out)
+    render_matplotlib(points, tris, values, clim, marker, label, title, out, outline=outline)
     return "matplotlib"
